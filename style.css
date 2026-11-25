@@ -2353,8 +2353,8 @@ input[type="number"] {
         flex-direction: column;
         justify-content: center;
 
-        min-height: 80px;
-        padding-right: 90px;
+        min-height: 105px;
+        padding-right: 115px;
         margin-bottom: 20px;
     }
 
@@ -2377,8 +2377,8 @@ input[type="number"] {
 
         transform: translateY(-50%);
 
-        width: 75px;
-        height: 75px;
+        width: 100px;
+        height: 100px;
 
         object-fit: contain;
 
