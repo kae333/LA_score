@@ -13,7 +13,25 @@ function renderResultPreview() {
 
     $("result-team").disabled = layout !== "team";
 
-    preview.className = `theme-${theme}`;
+    // 現在の管理画面と同じテーマを使用する場合
+
+    let actualTheme = theme;
+
+    if (theme === "current") {
+
+        actualTheme =
+            document.documentElement.dataset.theme
+            || "christmas";
+
+        if (actualTheme === "custom") {
+            actualTheme = "current";
+        }
+
+    }
+
+    preview.className = `theme-${actualTheme}`;
+
+    // 班が登録されていない場合
 
     if (state.teams.length === 0) {
 
@@ -27,6 +45,8 @@ function renderResultPreview() {
         return;
 
     }
+
+    // レイアウトの切り替え
 
     switch (layout) {
 
@@ -64,24 +84,53 @@ function resultHeader(title) {
 
     const theme = $("result-theme").value;
 
+    const actualTheme = theme === "current"
+        ? document.documentElement.dataset.theme || "christmas"
+        : theme;
+
+    const themeLabels = {
+
+        christmas: "✦ CHRISTMAS PARTY ✦",
+
+        mint: "LOVE ALL",
+
+        sunset: "LOVE ALL",
+
+        strawberry: "LOVE ALL",
+
+        ocean: "LOVE ALL",
+
+        tropical: "LOVE ALL",
+
+        simple: "PARTY SCORE",
+
+        dark: "PARTY SCORE"
+
+    };
+
+    const eyebrow =
+        themeLabels[actualTheme] || "PARTY SCORE";
+
     return `
 
         <div class="result-header">
 
             <div class="result-eyebrow">
-                ${
-                    theme === "christmas"
-                        ? "✦ CHRISTMAS PARTY ✦"
-                        : "PARTY SCORE"
-                }
+
+                ${eyebrow}
+
             </div>
 
             <h1>
+
                 ${escapeHTML(state.eventName)}
+
             </h1>
 
             <h2>
+
                 ${escapeHTML(title)}
+
             </h2>
 
         </div>

@@ -10,63 +10,63 @@
 
 const THEMES = {
 
-    sunset: {
-        name: "Sunset Soda",
+    christmas: {
+        name: "Frozen Christmas",
         colors: [
-            "#39333F",
-            "#49414F",
-            "#8D79AA",
-            "#F4BF83"
-        ]
-    },
-
-    strawberry: {
-        name: "Strawberry Noël",
-        colors: [
-            "#392429",
-            "#4C3037",
-            "#B96B7C",
-            "#E4C69F"
-        ]
-    },
-
-    tropical: {
-        name: "Tropical Splash",
-        colors: [
-            "#233B45",
-            "#2F4A56",
-            "#719EAC",
-            "#DCC580"
+            "#193D40",
+            "#2B5155",
+            "#783346",
+            "#DAF0F2"
         ]
     },
 
     mint: {
-        name: "Mint Chocolate",
+        name: "Classic Choco Mint",
         colors: [
-            "#382E2D",
-            "#493B38",
-            "#9FC5B5",
-            "#D4B59E"
+            "#362925",
+            "#503C34",
+            "#92D6BC",
+            "#C59B7B"
+        ]
+    },
+
+    sunset: {
+        name: "Cotton Candy Sky",
+        colors: [
+            "#393B53",
+            "#50516B",
+            "#E0B4D2",
+            "#F1CDD3"
+        ]
+    },
+
+    strawberry: {
+        name: "Classic Shortcake",
+        colors: [
+            "#F5EEE4",
+            "#FFFAF5",
+            "#B94B5B",
+            "#E9B9BE"
         ]
     },
 
     ocean: {
-        name: "Ocean Float",
+        name: "Deep Blue",
         colors: [
-            "#293B46",
-            "#354C59",
-            "#86AEBF",
-            "#E1BEA6"
+            "#101522",
+            "#1C263B",
+            "#376ED9",
+            "#C9D9F5"
         ]
     },
 
-    christmas: {
-        name: "Christmas Ribbon",
+    tropical: {
+        name: "Citrus Pop",
         colors: [
-            "#263A30",
-            "#30463A",
-            "#D0BC98",
-            "#B7AD8F"
+            "#F0EDD4",
+            "#F7F8EF",
+            "#79A85D",
+            "#E8CE70"
         ]
     }
 
@@ -467,170 +467,222 @@ function getThemeColors() {
 
 function applyTheme() {
 
-    const [
+    const [base, card, accent, decoration] =
+        getThemeColors();
 
+    const root = document.documentElement;
+    const selected = themeSettings.selected;
+
+    // ライトテーマの判定
+
+    const isLight =
+        relativeLuminance(base) > 0.4;
+
+    // テーマ別の文字色
+
+    let text = isLight
+        ? "#30352F"
+        : "#EDE9E3";
+
+    if (selected === "strawberry") {
+        text = "#65414A";
+    }
+
+    if (selected === "tropical") {
+        text = "#39452F";
+    }
+
+    if (selected === "ocean") {
+        text = "#ECF1FA";
+    }
+
+    if (selected === "christmas") {
+        text = "#F2FCFD";
+    }
+
+    const muted = mixColors(
+        text,
         base,
+        0.18
+    );
 
-        card,
+    // 文字のコントラストを確保
 
-        accent,
+    function ensureContrast(color, background) {
 
-        decoration
+        let result = color;
 
-    ] = getThemeColors();
+        const target =
+            relativeLuminance(background) > 0.4
+                ? "#000000"
+                : "#FFFFFF";
 
-    const root =
-        document.documentElement;
+        for (let i = 0; i < 60; i++) {
 
+            if (
+                contrastRatio(
+                    result,
+                    background
+                ) >= 4.5
+            ) {
+                return result;
+            }
 
-    /* 柔らかい文字色 */
-
-    const text = "#EDE9E3";
-
-    const muted = "#D5D1CC";
-
-
-    /* メイン背景 */
-
-    const background =
-        readableBackground(
-            base,
-            text
-        );
-
-
-    /* カード背景 */
-
-    const surface =
-        readableBackground(
-            card,
-            text
-        );
-
-
-    /* サイドバー */
-
-    const sidebar =
-        darkenColor(
-            background,
-            0.12
-        );
-
-
-    /* カードのホバー */
-
-    const surfaceHover =
-        readableBackground(
-
-            lightenColor(
-                surface,
+            result = mixColors(
+                result,
+                target,
                 0.06
-            ),
+            );
 
-            text
+        }
 
-        );
+        return result;
 
+    }
 
-    /* 入力欄 */
+    // 背景とカード
 
-    const inputBackground =
-        darkenColor(
-            surface,
-            0.12
-        );
+    const background = base;
+    const surface = card;
 
+    const sidebar = isLight
+        ? mixColors(base, card, 0.4)
+        : darkenColor(base, 0.12);
 
-    /* 差し色を活かしたボタン */
+    const surfaceHover = isLight
+        ? darkenColor(card, 0.04)
+        : lightenColor(card, 0.06);
 
-    const buttonColor =
-        accent;
+    const inputBackground = isLight
+        ? mixColors(card, base, 0.45)
+        : darkenColor(card, 0.12);
 
-    const buttonHover =
-        mixColors(
-            accent,
-            surface,
-            0.15
-        );
+    // ヘッダー
 
+    let header = sidebar;
 
-    /* ボタンの文字色 */
+    if (selected === "christmas") {
+        header = "#783346";
+    }
 
-    const primaryText =
-        readableText(buttonColor);
+    if (selected === "strawberry") {
+        header = "#FFFAF5";
+    }
 
-    const primaryHoverText =
-        readableText(buttonHover);
+    if (selected === "tropical") {
+        header = "#F7F8EF";
+    }
 
+    // ボタン
 
-    /* 装飾カラーの文字色 */
+    const buttonColor = accent;
 
-    const decorationText =
-        readableText(decoration);
+    const buttonHover = mixColors(
+        accent,
+        surface,
+        0.15
+    );
 
+    const primaryText = ensureContrast(
+        readableText(buttonColor),
+        buttonColor
+    );
 
-    /* 見出し用の差し色 */
+    const primaryHoverText = ensureContrast(
+        readableText(buttonHover),
+        buttonHover
+    );
 
-    const accentHeading =
-        readableAccent(
-            accent,
-            surface
-        );
+    // 装飾色と見出し
 
-    const decorationHeading =
-        readableAccent(
-            decoration,
-            surface
-        );
+    const decorationText = ensureContrast(
+        readableText(decoration),
+        decoration
+    );
 
+    const accentHeading = ensureContrast(
+        accent,
+        surface
+    );
 
-    /* 枠線 */
+    const decorationHeading = ensureContrast(
+        decoration,
+        surface
+    );
 
-    const border =
-        lightenColor(
-            surface,
-            0.14
-        );
+    // 枠線
 
+    const border = isLight
+        ? darkenColor(surface, 0.12)
+        : lightenColor(surface, 0.14);
 
-    /* 減点・削除ボタン */
+    // 削除・減点ボタン
 
-    const dangerBackground =
-        mixColors(
-            surface,
-            "#805050",
-            0.25
-        );
+    const dangerBackground = isLight
+        ? mixColors(surface, "#C77D7D", 0.18)
+        : mixColors(surface, "#805050", 0.25);
 
+    // クマの色
 
-    /* CSS変数 */
+    let bearColor = decoration;
+
+    if (selected === "strawberry") {
+        bearColor = "#65414A";
+    }
+
+    if (selected === "tropical") {
+        bearColor = "#39452F";
+    }
+
+    if (selected === "christmas") {
+        bearColor = "#DAF0F2";
+    }
+
+    if (selected === "ocean") {
+        bearColor = "#C9D9F5";
+    }
+
+    // 最高得点カード
+
+    let highlight = decoration;
+
+    if (selected === "mint") {
+        highlight = accent;
+    }
+
+    if (selected === "ocean") {
+        highlight = accent;
+    }
+
+    const highlightText =
+        readableText(highlight);
+
+    // CSS変数
 
     const vars = {
 
         "--background": background,
-
         "--surface": surface,
-
         "--surface-hover": surfaceHover,
 
         "--sidebar-bg": sidebar,
-
-        "--header-bg": sidebar,
-
+        "--header-bg": header,
         "--input-bg": inputBackground,
 
+        "--text": ensureContrast(
+            text,
+            surface
+        ),
 
-        "--text": text,
-
-        "--text-sub": muted,
+        "--text-sub": ensureContrast(
+            muted,
+            surface
+        ),
 
         "--border": border,
 
-
         "--primary": buttonColor,
-
         "--primary-hover": buttonHover,
-
         "--primary-text": primaryText,
 
         "--primary-hover-text":
@@ -638,51 +690,46 @@ function applyTheme() {
 
         "--primary-light": surfaceHover,
 
-
         "--accent": accent,
-
-        "--accent-text":
-            readableText(accent),
-
-        "--accent-heading":
-            accentHeading,
-
+        "--accent-text": primaryText,
+        "--accent-heading": accentHeading,
 
         "--decoration": decoration,
-
-        "--decoration-text":
-            decorationText,
+        "--decoration-text": decorationText,
 
         "--decoration-heading":
             decorationHeading,
 
+        "--highlight": highlight,
+        "--highlight-text": highlightText,
 
-        "--danger": "#D6A3A3",
+        "--danger": isLight
+            ? "#963E48"
+            : "#D6A3A3",
 
-        "--danger-bg":
-            dangerBackground,
+        "--danger-bg": dangerBackground,
 
+        "--gold": isLight
+            ? "#82651F"
+            : "#D4BC8B",
 
-        "--gold": "#D4BC8B",
+        "--silver": isLight
+            ? "#626C75"
+            : "#BCC4C8",
 
-        "--silver": "#BCC4C8",
+        "--bronze": isLight
+            ? "#925D42"
+            : "#BD9B83",
 
-        "--bronze": "#BD9B83",
-
-
-        "--bear-color": decoration,
-
+        "--bear-color": bearColor,
 
         "--gradient-start": base,
-
         "--gradient-middle": card,
-
         "--gradient-end": decoration
 
     };
 
-
-    /* CSSに反映 */
+    // CSSに反映
 
     Object.entries(vars).forEach(
         ([name, value]) => {
@@ -695,22 +742,31 @@ function applyTheme() {
         }
     );
 
+    // テーマ情報
 
-    /* 現在のテーマ */
+    root.dataset.theme = selected;
 
-    root.dataset.theme =
-        themeSettings.selected;
+    root.dataset.scheme =
+        isLight ? "light" : "dark";
 
+    root.style.colorScheme =
+        isLight ? "light" : "dark";
 
-    /* クマの表示切り替え */
+    // クマの表示切り替え
 
     document.body.classList.toggle(
-
         "hide-bear",
-
         !themeSettings.showBear
-
     );
+
+    // 現在の配色で結果プレビューを更新
+
+    if (
+        typeof renderResultPreview === "function" &&
+        document.getElementById("result-preview")
+    ) {
+        renderResultPreview();
+    }
 
 }
 
