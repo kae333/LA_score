@@ -1,0 +1,437 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PARTY SCORE</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- 画像・PDF出力用ライブラリ -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="brand">
+            PARTY SCORE
+        </div>
+
+        <div id="event-title">
+            Christmas Party 2026
+        </div>
+    </header>
+
+    <div class="app-layout">
+
+        <!-- サイドメニュー -->
+        <aside class="sidebar">
+
+            <p class="menu-label">MENU</p>
+
+            <nav>
+                <button class="nav-btn active" data-page="dashboard">
+                    総合順位
+                </button>
+
+                <button class="nav-btn" data-page="teams">
+                    班管理
+                </button>
+
+                <button class="nav-btn" data-page="games">
+                    ゲーム管理
+                </button>
+
+                <button class="nav-btn" data-page="scores">
+                    得点一覧
+                </button>
+
+                <button class="nav-btn" data-page="results">
+                    結果出力
+                </button>
+
+                <button class="nav-btn" data-page="settings">
+                    設定
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <span id="save-status">ローカル保存</span>
+            </div>
+
+        </aside>
+
+        <!-- メインコンテンツ -->
+        <main class="main-content">
+
+            <!-- 総合順位 -->
+            <section id="dashboard" class="page active">
+
+                <div class="page-heading">
+                    <h1>ダッシュボード</h1>
+                    <p>現在の得点と総合順位</p>
+                </div>
+
+                <div class="summary-grid">
+
+                    <div class="summary-card">
+                        <span>参加チーム</span>
+                        <strong id="team-count">0</strong>
+                    </div>
+
+                    <div class="summary-card">
+                        <span>ゲーム数</span>
+                        <strong id="game-count">0</strong>
+                    </div>
+
+                    <div class="summary-card">
+                        <span>最高得点</span>
+                        <strong id="highest-score">0</strong>
+                    </div>
+
+                </div>
+
+                <div class="panel">
+                    <h2>総合順位</h2>
+                    <div id="ranking-list"></div>
+                </div>
+
+                <div class="panel">
+                    <h2>ゲーム別成績</h2>
+                    <div id="game-summary"></div>
+                </div>
+
+            </section>
+
+
+            <!-- 班管理 -->
+            <section id="teams" class="page">
+
+                <div class="page-heading">
+                    <h1>班管理</h1>
+                    <p>すべてのゲームで共通の班を管理します</p>
+                </div>
+
+                <div class="panel">
+
+                    <div class="input-row">
+                        <input
+                            type="text"
+                            id="new-team-name"
+                            placeholder="班の名前"
+                        >
+
+                        <button id="add-team" class="primary-btn">
+                            ＋ 班を追加
+                        </button>
+                    </div>
+
+                    <div id="team-list"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ゲーム管理 -->
+            <section id="games" class="page">
+
+                <div class="page-heading">
+                    <h1>ゲーム管理</h1>
+                    <p>ゲーム・小ゲーム・配点を設定します</p>
+                </div>
+
+                <div class="panel">
+
+                    <div class="input-row">
+
+                        <input
+                            type="text"
+                            id="new-game-name"
+                            placeholder="ゲーム名"
+                        >
+
+                        <button id="add-game" class="primary-btn">
+                            ＋ ゲームを追加
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div id="game-list"></div>
+
+            </section>
+
+
+            <!-- 得点一覧 -->
+            <section id="scores" class="page">
+
+                <div class="page-heading">
+                    <h1>得点一覧</h1>
+                    <p>全ゲームの得点をまとめて確認できます</p>
+                </div>
+
+                <div class="panel">
+
+                    <div class="toolbar">
+
+                        <select id="score-sort">
+                            <option value="team">
+                                班の登録順
+                            </option>
+
+                            <option value="rank">
+                                総合順位順
+                            </option>
+                        </select>
+
+                        <label class="checkbox-label">
+                            <input
+                                type="checkbox"
+                                id="show-subgames"
+                            >
+                            小ゲームの内訳を表示
+                        </label>
+
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table id="score-table"></table>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- 結果出力 -->
+            <section id="results" class="page">
+
+                <div class="page-heading">
+                    <h1>結果出力</h1>
+                    <p>順位表を画像・PDFとして保存できます</p>
+                </div>
+
+                <div class="panel export-settings">
+
+                    <h2>出力設定</h2>
+
+                    <label for="result-layout">
+                        レイアウト
+                    </label>
+
+                    <select id="result-layout">
+
+                        <option value="ranking">
+                            総合順位ポスター
+                        </option>
+
+                        <option value="detail">
+                            詳細得点集計表
+                        </option>
+
+                        <option value="team">
+                            班別リザルトカード
+                        </option>
+
+                    </select>
+
+                    <label for="result-theme">
+                        デザイン
+                    </label>
+
+                    <select id="result-theme">
+
+    <option value="christmas">
+        Christmas Ribbon
+    </option>
+
+    <option value="sunset">
+        Sunset Soda
+    </option>
+
+    <option value="strawberry">
+        Strawberry Noël
+    </option>
+
+    <option value="tropical">
+        Tropical Splash
+    </option>
+
+    <option value="mint">
+        Mint Chocolate
+    </option>
+
+    <option value="ocean">
+        Ocean Float
+    </option>
+
+    <option value="current">
+        現在の管理画面と同じ配色
+    </option>
+
+    <option value="simple">
+        Simple White
+    </option>
+
+    <option value="dark">
+        Simple Dark
+    </option>
+
+</select>
+
+                    <label for="result-team">
+                        対象チーム
+                    </label>
+
+                    <select id="result-team"></select>
+
+                    <label class="checkbox-label">
+                        <input
+                            type="checkbox"
+                            id="export-game-scores"
+                            checked
+                        >
+                        ゲーム別得点を表示
+                    </label>
+
+                    <div class="input-row">
+
+                        <button id="download-png" class="primary-btn">
+                            PNG保存
+                        </button>
+
+                        <button id="download-pdf" class="primary-btn">
+                            PDF保存
+                        </button>
+
+                        <button id="download-csv" class="secondary-btn">
+                            CSV保存
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="preview-wrapper">
+
+                    <div id="result-preview"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- 設定 -->
+            <section id="settings" class="page">
+
+                <div class="page-heading">
+                    <h1>設定</h1>
+                    <p>イベント情報と保存データの管理</p>
+                </div>
+
+                <div class="panel">
+
+                    <h2>イベント情報</h2>
+
+                    <div class="form-group">
+
+                        <label for="event-name">
+                            イベント名
+                        </label>
+
+                        <input
+                            type="text"
+                            id="event-name"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="event-date">
+                            開催日
+                        </label>
+
+                        <input
+                            type="date"
+                            id="event-date"
+                        >
+
+                    </div>
+
+                    <button id="save-settings" class="primary-btn">
+                        設定を保存
+                    </button>
+
+                </div>
+
+                <div class="panel">
+
+                    <h2>データ管理</h2>
+
+                    <p>
+                        得点データのバックアップや復元ができます。
+                    </p>
+
+                    <div class="input-row">
+
+                        <button id="backup-data" class="secondary-btn">
+                            バックアップ
+                        </button>
+
+                        <button id="restore-data" class="secondary-btn">
+                            データ復元
+                        </button>
+
+                        <input
+                            type="file"
+                            id="restore-file"
+                            accept=".json"
+                            hidden
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="panel danger-zone">
+
+                    <h2>データの初期化</h2>
+
+                    <p>
+                        登録した班・ゲーム・得点をすべて削除します。
+                    </p>
+
+                    <button id="reset-data" class="danger-btn">
+                        全データを削除
+                    </button>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- 通知メッセージ -->
+    <div id="toast" class="toast"></div>
+
+   <!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- JavaScript -->
+<script src="app.js"></script>
+<script src="export.js"></script>
+<script src="database.js"></script>
+<script src="theme.js"></script>
+
+</body>
+</html>
