@@ -2306,48 +2306,93 @@ input[type="number"] {
     color: var(--text);
     border-color: var(--accent);
 }
-/* スマホ版のクマ */
 
 /* スマホ版のクマ */
+
+
+/* ========================================
+   ページタイトル
+======================================== */
+
+.page-heading {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.page-heading h1 {
+    margin-bottom: 6px;
+    color: var(--decoration-heading, var(--decoration));
+}
+
+.page-heading p {
+    margin-bottom: 0;
+    color: var(--text-sub);
+    font-size: 13px;
+}
+
+
+/* ========================================
+   スマホ専用のクマ
+======================================== */
+
+/* PCでは非表示 */
+
+.mobile-bear {
+    display: none;
+}
+
+
+/* スマホでは表示 */
 
 @media (max-width: 768px) {
 
-    .page.active {
+    .page-heading {
         position: relative;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        min-height: 80px;
+        padding-right: 90px;
+        margin-bottom: 20px;
     }
 
-    .page.active::before {
-        content: "";
+    .page-heading h1 {
+        font-size: 22px;
+        margin-bottom: 6px;
+    }
+
+    .page-heading p {
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .mobile-bear {
+        display: block;
 
         position: absolute;
-        top: -8px;
-        right: 5px;
+        top: 50%;
+        right: 4px;
 
-        width: 65px;
-        height: 65px;
+        transform: translateY(-50%);
 
-        background-image: url("./bear.png");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
+        width: 75px;
+        height: 75px;
 
-        opacity: 0.9;
+        object-fit: contain;
+
+        opacity: 0.85;
         pointer-events: none;
-        z-index: 5;
     }
 
-    .page h1 {
-        padding-right: 80px;
-        min-height: 60px;
-        display: flex;
-        align-items: center;
-    }
+    /* クマを非表示にする設定 */
 
-    .hide-bear .page.active::before {
+    .hide-bear .mobile-bear {
         display: none;
     }
 
-    .hide-bear .page h1 {
+    .hide-bear .page-heading {
         padding-right: 0;
         min-height: 0;
     }
