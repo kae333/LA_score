@@ -4016,3 +4016,450 @@ input[type="number"] {
     }
 
 }
+
+/* =========================================
+   CREAMY MINT × FINE FLAKES
+========================================= */
+
+
+/* 01. チョコフレークの質感
+========================================= */
+
+:root {
+
+    --mint-flakes:
+
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='380' viewBox='0 0 420 380'%3E%3Cdefs%3E%3ClinearGradient id='c' x1='0' y1='0' x2='.8' y2='1'%3E%3Cstop offset='0' stop-color='%238C6955'/%3E%3Cstop offset='.4' stop-color='%23503C34'/%3E%3Cstop offset='1' stop-color='%23291B16'/%3E%3C/linearGradient%3E%3Cg id='a'%3E%3Cpath d='M0 0 L4 -2 8 1 7 4 2 5 -1 2Z' fill='url(%23c)'/%3E%3Cpath d='M0 0 L4 -2 8 1' fill='none' stroke='%23B08B73' stroke-width='.65'/%3E%3C/g%3E%3Cg id='b'%3E%3Cpath d='M0 0 L3 -1 7 2 4 4 1 3Z' fill='%23432D24'/%3E%3Cpath d='M0 0 L3 -1 7 2' fill='none' stroke='%238E6B56' stroke-width='.5'/%3E%3C/g%3E%3Cg id='d'%3E%3Cpath d='M0 0 L2 -2 4 0 3 3 0 2Z' fill='%23362925'/%3E%3C/g%3E%3C/defs%3E%3Cg opacity='.45'%3E%3Cuse href='%23a' transform='translate(12 24) rotate(32) scale(.6)'/%3E%3Cuse href='%23b' transform='translate(37 8) rotate(105) scale(.5)'/%3E%3Cuse href='%23d' transform='translate(54 39) rotate(71)'/%3E%3Cuse href='%23a' transform='translate(87 18) rotate(158) scale(.4)'/%3E%3Cuse href='%23b' transform='translate(110 61) rotate(43) scale(.8)'/%3E%3Cuse href='%23d' transform='translate(128 12)'/%3E%3Cuse href='%23a' transform='translate(149 37) rotate(215) scale(.7)'/%3E%3Cuse href='%23b' transform='translate(187 21) rotate(12) scale(.6)'/%3E%3Cuse href='%23d' transform='translate(203 58) rotate(48)'/%3E%3Cuse href='%23a' transform='translate(238 15) rotate(97) scale(.8)'/%3E%3Cuse href='%23b' transform='translate(279 46) rotate(174) scale(.4)'/%3E%3Cuse href='%23d' transform='translate(303 9)'/%3E%3Cuse href='%23a' transform='translate(342 31) rotate(41) scale(.5)'/%3E%3Cuse href='%23b' transform='translate(384 18) rotate(216) scale(.8)'/%3E%3Cuse href='%23d' transform='translate(407 56)'/%3E%3Cuse href='%23a' transform='translate(17 91) rotate(112) scale(.8)'/%3E%3Cuse href='%23d' transform='translate(43 77)'/%3E%3Cuse href='%23b' transform='translate(65 119) rotate(37) scale(.6)'/%3E%3Cuse href='%23a' transform='translate(98 102) rotate(247) scale(.5)'/%3E%3Cuse href='%23d' transform='translate(139 88)'/%3E%3Cuse href='%23b' transform='translate(166 132) rotate(78) scale(.7)'/%3E%3Cuse href='%23a' transform='translate(197 96) rotate(151) scale(.4)'/%3E%3Cuse href='%23d' transform='translate(228 119)'/%3E%3Cuse href='%23b' transform='translate(257 83) rotate(93) scale(.8)'/%3E%3Cuse href='%23a' transform='translate(291 133) rotate(17) scale(.7)'/%3E%3Cuse href='%23d' transform='translate(319 105)'/%3E%3Cuse href='%23b' transform='translate(355 87) rotate(193) scale(.5)'/%3E%3Cuse href='%23a' transform='translate(395 126) rotate(66) scale(.6)'/%3E%3Cuse href='%23d' transform='translate(29 162)'/%3E%3Cuse href='%23a' transform='translate(8 192) rotate(36) scale(.6)'/%3E%3Cuse href='%23b' transform='translate(47 207) rotate(91) scale(.7)'/%3E%3Cuse href='%23a' transform='translate(81 174) rotate(189) scale(.8)'/%3E%3Cuse href='%23d' transform='translate(116 201)'/%3E%3Cuse href='%23b' transform='translate(151 167) rotate(43) scale(.5)'/%3E%3Cuse href='%23a' transform='translate(186 211) rotate(116) scale(.7)'/%3E%3Cuse href='%23d' transform='translate(217 174)'/%3E%3Cuse href='%23b' transform='translate(248 195) rotate(162) scale(.6)'/%3E%3Cuse href='%23a' transform='translate(281 168) rotate(28) scale(.4)'/%3E%3Cuse href='%23d' transform='translate(314 211)'/%3E%3Cuse href='%23b' transform='translate(343 181) rotate(79) scale(.8)'/%3E%3Cuse href='%23a' transform='translate(378 205) rotate(183) scale(.6)'/%3E%3Cuse href='%23d' transform='translate(410 174)'/%3E%3Cuse href='%23a' transform='translate(19 256) rotate(115) scale(.8)'/%3E%3Cuse href='%23b' transform='translate(51 278) rotate(16) scale(.4)'/%3E%3Cuse href='%23d' transform='translate(85 241)'/%3E%3Cuse href='%23a' transform='translate(117 286) rotate(78) scale(.6)'/%3E%3Cuse href='%23b' transform='translate(151 254) rotate(237) scale(.7)'/%3E%3Cuse href='%23d' transform='translate(183 277)'/%3E%3Cuse href='%23a' transform='translate(213 246) rotate(19) scale(.8)'/%3E%3Cuse href='%23b' transform='translate(248 291) rotate(138) scale(.5)'/%3E%3Cuse href='%23d' transform='translate(279 253)'/%3E%3Cuse href='%23a' transform='translate(318 278) rotate(51) scale(.7)'/%3E%3Cuse href='%23b' transform='translate(351 242) rotate(184) scale(.8)'/%3E%3Cuse href='%23d' transform='translate(385 289)'/%3E%3Cuse href='%23a' transform='translate(405 261) rotate(74) scale(.5)'/%3E%3Cuse href='%23b' transform='translate(12 331) rotate(11) scale(.7)'/%3E%3Cuse href='%23a' transform='translate(44 361) rotate(159) scale(.6)'/%3E%3Cuse href='%23d' transform='translate(78 314)'/%3E%3Cuse href='%23b' transform='translate(112 346) rotate(57) scale(.8)'/%3E%3Cuse href='%23a' transform='translate(149 372) rotate(123) scale(.5)'/%3E%3Cuse href='%23d' transform='translate(176 329)'/%3E%3Cuse href='%23b' transform='translate(207 354) rotate(218) scale(.6)'/%3E%3Cuse href='%23a' transform='translate(245 319) rotate(31) scale(.8)'/%3E%3Cuse href='%23d' transform='translate(279 369)'/%3E%3Cuse href='%23b' transform='translate(311 337) rotate(96) scale(.5)'/%3E%3Cuse href='%23a' transform='translate(347 367) rotate(169) scale(.6)'/%3E%3Cuse href='%23d' transform='translate(381 326)'/%3E%3Cuse href='%23b' transform='translate(409 353) rotate(42) scale(.7)'/%3E%3C/g%3E%3C/svg%3E");
+
+}
+
+
+/* 02. メイン背景
+========================================= */
+
+:root[data-theme="mint"] body {
+
+    background-color: #BCE4D3;
+
+}
+
+:root[data-theme="mint"] .main-content {
+
+    background-color: #BCE4D3;
+
+    background-image:
+
+        var(--mint-flakes),
+
+        radial-gradient(
+            ellipse at 15% 0%,
+            rgba(238, 250, 242, .65),
+            transparent 60%
+        ),
+
+        radial-gradient(
+            ellipse at 100% 90%,
+            rgba(255, 255, 255, .18),
+            transparent 55%
+        );
+
+    background-size:
+        420px 380px,
+        100% 100%,
+        100% 100%;
+
+    background-repeat:
+        repeat,
+        no-repeat,
+        no-repeat;
+
+}
+
+
+/* 03. ヘッダー
+========================================= */
+
+:root[data-theme="mint"] .header {
+
+    background: #362925;
+
+    color: #92D6BC;
+
+    border-bottom:
+        1px solid rgba(220, 194, 170, .4);
+
+}
+
+:root[data-theme="mint"] .brand {
+
+    color: #92D6BC;
+
+}
+
+:root[data-theme="mint"] #event-title {
+
+    color: #DCC2AA;
+
+}
+
+
+/* 04. サイドバー
+========================================= */
+
+:root[data-theme="mint"] .sidebar {
+
+    background: #503C34;
+
+    border-color:
+        rgba(220, 194, 170, .2);
+
+}
+
+:root[data-theme="mint"] .nav-btn {
+
+    background: #362925;
+
+    color: #F1E8DE;
+
+}
+
+:root[data-theme="mint"] .nav-btn:hover {
+
+    background: #62493E;
+
+}
+
+:root[data-theme="mint"] .nav-btn.active {
+
+    background: #92D6BC;
+
+    color: #362925;
+
+    border-color: transparent;
+
+}
+
+
+/* 05. ページ見出し
+========================================= */
+
+:root[data-theme="mint"] .page-heading h1,
+:root[data-theme="mint"] .page-header h1 {
+
+    color: #362925;
+
+}
+
+:root[data-theme="mint"] .page-heading p,
+:root[data-theme="mint"] .page-header p,
+:root[data-theme="mint"] .page-description {
+
+    color: #503C34;
+
+}
+
+
+/* 06. パネル・カード
+========================================= */
+
+:root[data-theme="mint"] .panel,
+:root[data-theme="mint"] .summary-card {
+
+    background: #503C34;
+
+    color: #F1E8DE;
+
+    border: 1px solid rgba(54, 41, 37, .2);
+
+    box-shadow:
+        0 4px 14px rgba(54, 41, 37, .08);
+
+}
+
+:root[data-theme="mint"] .panel h2 {
+
+    color: #92D6BC;
+
+}
+
+:root[data-theme="mint"] .panel p {
+
+    color: #E4D5C9;
+
+}
+
+:root[data-theme="mint"] .summary-card span {
+
+    color: #E4D5C9;
+
+}
+
+:root[data-theme="mint"] #team-count,
+:root[data-theme="mint"] #game-count {
+
+    color: #F1E8DE;
+
+}
+
+
+/* 07. 最高得点カード
+========================================= */
+
+:root[data-theme="mint"] .summary-card:has(#highest-score) {
+
+    background: #DCC2AA;
+
+    border-color: transparent;
+
+}
+
+:root[data-theme="mint"] #highest-score,
+:root[data-theme="mint"] .summary-card:has(#highest-score) span {
+
+    color: #362925;
+
+}
+
+
+/* 08. ボタン
+========================================= */
+
+:root[data-theme="mint"] .primary-btn,
+:root[data-theme="mint"] .btn-primary,
+:root[data-theme="mint"] .point-btn:not(.minus) {
+
+    background: #92D6BC;
+
+    color: #362925;
+
+    border-color: transparent;
+
+}
+
+:root[data-theme="mint"] .primary-btn:hover,
+:root[data-theme="mint"] .btn-primary:hover,
+:root[data-theme="mint"] .point-btn:not(.minus):hover {
+
+    background: #A7DFC9;
+
+    color: #362925;
+
+}
+
+:root[data-theme="mint"] .secondary-btn,
+:root[data-theme="mint"] .point-btn.minus {
+
+    background: #362925;
+
+    color: #DCC2AA;
+
+    border-color:
+        rgba(220, 194, 170, .35);
+
+}
+
+
+/* 09. 順位バー
+========================================= */
+
+:root[data-theme="mint"] .rank-bar {
+
+    background: #362925;
+
+}
+
+:root[data-theme="mint"] .rank-bar-fill,
+:root[data-theme="mint"] .ranking-row:first-child .rank-bar-fill {
+
+    background: #92D6BC;
+
+}
+
+:root[data-theme="mint"] .ranking-row:first-child .rank-score {
+
+    color: #92D6BC;
+
+}
+
+
+/* 10. クマの色
+========================================= */
+
+
+/* PC：ベージュの線画 */
+
+:root[data-theme="mint"] .bear-image {
+
+    filter:
+        brightness(0)
+        saturate(100%)
+        invert(84%)
+        sepia(15%)
+        saturate(550%)
+        hue-rotate(345deg);
+
+    opacity: .9;
+
+}
+
+:root[data-theme="mint"] .bear-caption {
+
+    color: #DCC2AA;
+
+}
+
+
+/* スマホ：チョコブラウンの線画 */
+
+:root[data-theme="mint"] .mobile-bear {
+
+    filter:
+        brightness(0)
+        saturate(100%)
+        invert(19%)
+        sepia(19%)
+        saturate(900%)
+        hue-rotate(330deg);
+
+    opacity: .85;
+
+}
+
+
+/* =========================================
+   MINT CREAM：結果出力
+========================================= */
+
+
+/* D案の配色を維持してフレークを追加 */
+
+#result-preview.theme-mint {
+
+    background-color: #DCEEE3;
+
+    background-image:
+
+        var(--mint-flakes),
+
+        radial-gradient(
+            ellipse at 10% 0%,
+            rgba(255, 255, 255, .45),
+            transparent 65%
+        );
+
+    background-size:
+        420px 380px,
+        100% 100%;
+
+    background-repeat:
+        repeat,
+        no-repeat;
+
+    color: #503C34;
+
+}
+
+
+/* チョコレート色のヘッダー */
+
+#result-preview.theme-mint .result-header {
+
+    background: #503C34;
+
+}
+
+
+/* 順位カードは無地 */
+
+#result-preview.theme-mint .result-ranking-row {
+
+    background: #F7FAF4;
+
+}
+
+#result-preview.theme-mint .result-ranking-row.place-1 {
+
+    background: #92D6BC;
+
+}
+
+#result-preview.theme-mint .result-footer {
+
+    background: transparent;
+
+    color: #503C34;
+
+}
+
+
+/* =========================================
+   スマホ向け調整
+========================================= */
+
+@media (max-width: 768px) {
+
+    :root[data-theme="mint"] .main-content {
+
+        background-size:
+            330px 299px,
+            100% 100%,
+            100% 100%;
+
+    }
+
+    :root[data-theme="mint"] .sidebar {
+
+        background: #503C34;
+
+    }
+
+    #result-preview.theme-mint {
+
+        background-size:
+            330px 299px,
+            100% 100%;
+
+    }
+
+}
+/* =========================================
+   REALISTIC CHOCOLATE FLAKES
+========================================= */
+
+:root[data-theme="mint"] .main-content {
+
+    background-size:
+        480px 480px,
+        100% 100%,
+        100% 100%;
+
+}
+
+#result-preview.theme-mint {
+
+    background-size:
+        480px 480px,
+        100% 100%;
+
+}
+
+@media (max-width: 768px) {
+
+    :root[data-theme="mint"] .main-content {
+
+        background-size:
+            380px 380px,
+            100% 100%,
+            100% 100%;
+
+    }
+
+    #result-preview.theme-mint {
+
+        background-size:
+            380px 380px,
+            100% 100%;
+
+    }
+
+}

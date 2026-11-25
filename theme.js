@@ -1,12 +1,12 @@
 
-/* ========================================
+/* =========================================
    PARTY SCORE
-   THEME SYSTEM - ACCENT DESIGN
-======================================== */
+   THEME SYSTEM
+========================================= */
 
 
 /* 01. プリセットテーマ
-======================================== */
+========================================= */
 
 const THEMES = {
 
@@ -21,12 +21,12 @@ const THEMES = {
     },
 
     mint: {
-        name: "Classic Choco Mint",
+        name: "Creamy Mint",
         colors: [
-            "#362925",
+            "#BCE4D3",
             "#503C34",
-            "#92D6BC",
-            "#C59B7B"
+            "#362925",
+            "#DCC2AA"
         ]
     },
 
@@ -72,11 +72,12 @@ const THEMES = {
 
 };
 
+
 const THEME_STORAGE_KEY = "party-score-theme-v1";
 
 
 /* 02. 初期設定
-======================================== */
+========================================= */
 
 function defaultThemeSettings() {
 
@@ -96,7 +97,7 @@ function defaultThemeSettings() {
 
 
 /* 03. カラーコードの確認
-======================================== */
+========================================= */
 
 function validColor(color) {
 
@@ -108,8 +109,8 @@ function validColor(color) {
 }
 
 
-/* 04. テーマ設定の読み込み
-======================================== */
+/* 04. 保存された設定の読み込み
+========================================= */
 
 function loadThemeSettings() {
 
@@ -127,7 +128,6 @@ function loadThemeSettings() {
             Object.hasOwn(THEMES, saved.selected)
 
                 ? saved.selected
-
                 : defaults.selected;
 
         const custom = defaults.custom.map(
@@ -170,11 +170,12 @@ function loadThemeSettings() {
 
 }
 
+
 let themeSettings = loadThemeSettings();
 
 
 /* 05. テーマ設定の保存
-======================================== */
+========================================= */
 
 function saveThemeSettings() {
 
@@ -198,7 +199,7 @@ function saveThemeSettings() {
 
 
 /* 06. 色の変換
-======================================== */
+========================================= */
 
 function hexToRgb(hex) {
 
@@ -213,6 +214,7 @@ function hexToRgb(hex) {
     ];
 
 }
+
 
 function rgbToHex(rgb) {
 
@@ -232,7 +234,7 @@ function rgbToHex(rgb) {
 
 
 /* 07. 色の調整
-======================================== */
+========================================= */
 
 function mixColors(color1, color2, ratio) {
 
@@ -253,6 +255,7 @@ function mixColors(color1, color2, ratio) {
 
 }
 
+
 function darkenColor(color, amount) {
 
     return mixColors(
@@ -262,6 +265,7 @@ function darkenColor(color, amount) {
     );
 
 }
+
 
 function lightenColor(color, amount) {
 
@@ -275,7 +279,7 @@ function lightenColor(color, amount) {
 
 
 /* 08. 文字の視認性
-======================================== */
+========================================= */
 
 function relativeLuminance(color) {
 
@@ -306,6 +310,7 @@ function relativeLuminance(color) {
 
 }
 
+
 function contrastRatio(color1, color2) {
 
     const a = relativeLuminance(color1);
@@ -321,37 +326,6 @@ function contrastRatio(color1, color2) {
         Math.min(a, b) + 0.05
 
     );
-
-}
-
-
-/* 背景色の調整 */
-
-function readableBackground(
-    color,
-    text = "#EDE9E3"
-) {
-
-    let result = color;
-
-    for (let i = 0; i < 60; i++) {
-
-        if (
-            contrastRatio(result, text) >= 4.5
-        ) {
-
-            return result;
-
-        }
-
-        result = darkenColor(
-            result,
-            0.05
-        );
-
-    }
-
-    return result;
 
 }
 
@@ -384,27 +358,38 @@ function readableText(background) {
     }
 
     return contrastRatio(
+
         background,
         "#FFFFFF"
+
     ) >= contrastRatio(
+
         background,
         "#000000"
+
     )
 
         ? "#FFFFFF"
-
         : "#000000";
 
 }
 
 
-/* 暗い背景上に表示する差し色 */
+/* 文字色のコントラスト調整 */
 
-function readableAccent(color, background) {
+function ensureContrast(color, background) {
 
     let result = color;
 
-    for (let i = 0; i < 60; i++) {
+    const target =
+
+        contrastRatio(background, "#000000") >=
+        contrastRatio(background, "#FFFFFF")
+
+            ? "#000000"
+            : "#FFFFFF";
+
+    for (let i = 0; i < 100; i++) {
 
         if (
             contrastRatio(
@@ -417,26 +402,86 @@ function readableAccent(color, background) {
 
         }
 
-        result = lightenColor(
+        const next = mixColors(
             result,
+            target,
             0.06
         );
 
+        if (next === result) break;
+
+        result = next;
+
     }
 
-    return result;
+    return target;
+
+}
+
+
+/* 旧コードとの互換性 */
+
+function readableBackground(
+    color,
+    text = "#EDE9E3"
+) {
+
+    let result = color;
+
+    const target =
+
+        contrastRatio(text, "#000000") >=
+        contrastRatio(text, "#FFFFFF")
+
+            ? "#000000"
+            : "#FFFFFF";
+
+    for (let i = 0; i < 100; i++) {
+
+        if (
+            contrastRatio(
+                result,
+                text
+            ) >= 4.5
+        ) {
+
+            return result;
+
+        }
+
+        const next = mixColors(
+            result,
+            target,
+            0.05
+        );
+
+        if (next === result) break;
+
+        result = next;
+
+    }
+
+    return target;
+
+}
+
+
+function readableAccent(color, background) {
+
+    return ensureContrast(
+        color,
+        background
+    );
 
 }
 
 
 /* 09. 選択中のカラーを取得
-======================================== */
+========================================= */
 
 function getThemeColors() {
 
-    if (
-        themeSettings.selected === "custom"
-    ) {
+    if (themeSettings.selected === "custom") {
 
         return themeSettings.custom.map(
             (color, index) =>
@@ -463,211 +508,384 @@ function getThemeColors() {
 
 
 /* 10. テーマの適用
-======================================== */
+========================================= */
 
 function applyTheme() {
 
-    const [base, card, accent, decoration] =
-        getThemeColors();
+    const [
+
+        base,
+
+        card,
+
+        accent,
+
+        decoration
+
+    ] = getThemeColors();
+
 
     const root = document.documentElement;
+
     const selected = themeSettings.selected;
 
-    // ライトテーマの判定
+
+    /* Creamy Mintの判定 */
+
+    const isMint =
+        selected === "mint";
+
+
+    /* ライトテーマの判定 */
 
     const isLight =
-        relativeLuminance(base) > 0.4;
 
-    // テーマ別の文字色
+        !isMint &&
+        relativeLuminance(card) > 0.4;
+
+
+    /* 文字色 */
 
     let text = isLight
+
         ? "#30352F"
+
         : "#EDE9E3";
 
+
     if (selected === "strawberry") {
+
         text = "#65414A";
+
     }
+
 
     if (selected === "tropical") {
+
         text = "#39452F";
+
     }
+
 
     if (selected === "ocean") {
+
         text = "#ECF1FA";
+
     }
 
+
     if (selected === "christmas") {
+
         text = "#F2FCFD";
+
     }
+
+
+    if (isMint) {
+
+        text = "#F1E8DE";
+
+    }
+
 
     const muted = mixColors(
         text,
-        base,
+        card,
         0.18
     );
 
-    // 文字のコントラストを確保
 
-    function ensureContrast(color, background) {
+    /* メイン背景 */
 
-        let result = color;
+    const background = base;
 
-        const target =
-            relativeLuminance(background) > 0.4
-                ? "#000000"
-                : "#FFFFFF";
 
-        for (let i = 0; i < 60; i++) {
+    /* カード背景 */
 
-            if (
-                contrastRatio(
-                    result,
-                    background
-                ) >= 4.5
-            ) {
-                return result;
-            }
+    const surface = card;
 
-            result = mixColors(
-                result,
-                target,
-                0.06
-            );
 
-        }
+    /* サイドバー */
 
-        return result;
+    let sidebar = isLight
+
+        ? mixColors(base, card, 0.4)
+
+        : darkenColor(base, 0.12);
+
+
+    if (isMint) {
+
+        sidebar = "#503C34";
 
     }
 
-    // 背景とカード
 
-    const background = base;
-    const surface = card;
-
-    const sidebar = isLight
-        ? mixColors(base, card, 0.4)
-        : darkenColor(base, 0.12);
+    /* カードのホバー */
 
     const surfaceHover = isLight
-        ? darkenColor(card, 0.04)
-        : lightenColor(card, 0.06);
 
-    const inputBackground = isLight
+        ? darkenColor(surface, 0.04)
+
+        : lightenColor(surface, 0.06);
+
+
+    /* 入力欄 */
+
+    let inputBackground = isLight
+
         ? mixColors(card, base, 0.45)
-        : darkenColor(card, 0.12);
 
-    // ヘッダー
+        : darkenColor(surface, 0.12);
+
+
+    if (isMint) {
+
+        inputBackground = "#362925";
+
+    }
+
+
+    /* ヘッダー */
 
     let header = sidebar;
 
+
     if (selected === "christmas") {
+
         header = "#783346";
+
     }
+
 
     if (selected === "strawberry") {
+
         header = "#FFFAF5";
+
     }
+
 
     if (selected === "tropical") {
+
         header = "#F7F8EF";
+
     }
 
-    // ボタン
 
-    const buttonColor = accent;
+    if (isMint) {
 
-    const buttonHover = mixColors(
-        accent,
+        header = "#362925";
+
+    }
+
+
+    /* ボタン */
+
+    let buttonColor = accent;
+
+
+    if (isMint) {
+
+        buttonColor = "#92D6BC";
+
+    }
+
+
+    let buttonHover = mixColors(
+
+        buttonColor,
+
         surface,
+
         0.15
+
     );
 
-    const primaryText = ensureContrast(
-        readableText(buttonColor),
-        buttonColor
-    );
 
-    const primaryHoverText = ensureContrast(
-        readableText(buttonHover),
-        buttonHover
-    );
+    if (isMint) {
 
-    // 装飾色と見出し
+        buttonHover = "#A7DFC9";
 
-    const decorationText = ensureContrast(
-        readableText(decoration),
-        decoration
-    );
+    }
 
-    const accentHeading = ensureContrast(
-        accent,
-        surface
-    );
 
-    const decorationHeading = ensureContrast(
-        decoration,
-        surface
-    );
+    /* ボタンの文字色 */
 
-    // 枠線
+    const primaryText = isMint
+
+        ? "#362925"
+
+        : readableText(buttonColor);
+
+
+    const primaryHoverText = isMint
+
+        ? "#362925"
+
+        : readableText(buttonHover);
+
+
+    /* 実際に画面で使用するアクセント */
+
+    const displayAccent = isMint
+
+        ? "#92D6BC"
+
+        : accent;
+
+
+    /* 装飾色の文字色 */
+
+    const decorationText =
+        readableText(decoration);
+
+
+    /* 見出し用の差し色 */
+
+    const accentHeading =
+        ensureContrast(
+
+            displayAccent,
+
+            surface
+
+        );
+
+
+    const decorationHeading =
+        ensureContrast(
+
+            decoration,
+
+            surface
+
+        );
+
+
+    /* メイン背景上の文字 */
+
+    const pageText = isMint
+
+        ? "#362925"
+
+        : ensureContrast(text, background);
+
+
+    const pageMuted = isMint
+
+        ? "#503C34"
+
+        : ensureContrast(muted, background);
+
+
+    /* 枠線 */
 
     const border = isLight
+
         ? darkenColor(surface, 0.12)
+
         : lightenColor(surface, 0.14);
 
-    // 削除・減点ボタン
+
+    /* 削除・減点ボタン */
 
     const dangerBackground = isLight
-        ? mixColors(surface, "#C77D7D", 0.18)
-        : mixColors(surface, "#805050", 0.25);
 
-    // クマの色
+        ? mixColors(
+            surface,
+            "#C77D7D",
+            0.18
+        )
+
+        : mixColors(
+            surface,
+            "#805050",
+            0.25
+        );
+
+
+    /* クマの色 */
 
     let bearColor = decoration;
 
+
     if (selected === "strawberry") {
+
         bearColor = "#65414A";
+
     }
+
 
     if (selected === "tropical") {
+
         bearColor = "#39452F";
+
     }
+
 
     if (selected === "christmas") {
+
         bearColor = "#DAF0F2";
+
     }
+
 
     if (selected === "ocean") {
+
         bearColor = "#C9D9F5";
+
     }
 
-    // 最高得点カード
+
+    if (isMint) {
+
+        bearColor = "#DCC2AA";
+
+    }
+
+
+    /* 最高得点カード */
 
     let highlight = decoration;
 
-    if (selected === "mint") {
-        highlight = accent;
+
+    if (isMint) {
+
+        highlight = "#DCC2AA";
+
     }
+
 
     if (selected === "ocean") {
+
         highlight = accent;
+
     }
 
-    const highlightText =
-        readableText(highlight);
 
-    // CSS変数
+    const highlightText = isMint
+
+        ? "#362925"
+
+        : readableText(highlight);
+
+
+    /* CSS変数 */
 
     const vars = {
 
         "--background": background,
+
         "--surface": surface,
+
         "--surface-hover": surfaceHover,
 
         "--sidebar-bg": sidebar,
+
         "--header-bg": header,
+
         "--input-bg": inputBackground,
+
 
         "--text": ensureContrast(
             text,
@@ -679,10 +897,17 @@ function applyTheme() {
             surface
         ),
 
+        "--page-text": pageText,
+
+        "--page-muted": pageMuted,
+
         "--border": border,
 
+
         "--primary": buttonColor,
+
         "--primary-hover": buttonHover,
+
         "--primary-text": primaryText,
 
         "--primary-hover-text":
@@ -690,46 +915,84 @@ function applyTheme() {
 
         "--primary-light": surfaceHover,
 
-        "--accent": accent,
+
+        "--accent": displayAccent,
+
         "--accent-text": primaryText,
+
         "--accent-heading": accentHeading,
 
+
         "--decoration": decoration,
+
         "--decoration-text": decorationText,
 
         "--decoration-heading":
             decorationHeading,
 
+
         "--highlight": highlight,
+
         "--highlight-text": highlightText,
 
+
         "--danger": isLight
+
             ? "#963E48"
+
             : "#D6A3A3",
+
 
         "--danger-bg": dangerBackground,
 
+
         "--gold": isLight
+
             ? "#82651F"
+
             : "#D4BC8B",
 
+
         "--silver": isLight
+
             ? "#626C75"
+
             : "#BCC4C8",
 
+
         "--bronze": isLight
+
             ? "#925D42"
+
             : "#BD9B83",
+
 
         "--bear-color": bearColor,
 
+
         "--gradient-start": base,
+
         "--gradient-middle": card,
-        "--gradient-end": decoration
+
+        "--gradient-end": decoration,
+
+
+        "--mint-cream": "#BCE4D3",
+
+        "--mint-fresh": "#92D6BC",
+
+        "--mint-chocolate": "#503C34",
+
+        "--mint-dark-chocolate": "#362925",
+
+        "--mint-beige": "#DCC2AA",
+
+        "--mint-flake-opacity": "0.45"
 
     };
 
-    // CSSに反映
+
+    /* CSSに反映 */
 
     Object.entries(vars).forEach(
         ([name, value]) => {
@@ -742,37 +1005,57 @@ function applyTheme() {
         }
     );
 
-    // テーマ情報
+
+    /* 現在のテーマ */
 
     root.dataset.theme = selected;
 
+
     root.dataset.scheme =
-        isLight ? "light" : "dark";
+
+        isLight
+
+            ? "light"
+
+            : "dark";
+
 
     root.style.colorScheme =
-        isLight ? "light" : "dark";
 
-    // クマの表示切り替え
+        isLight
+
+            ? "light"
+
+            : "dark";
+
+
+    /* クマの表示切り替え */
 
     document.body.classList.toggle(
+
         "hide-bear",
+
         !themeSettings.showBear
+
     );
 
-    // 現在の配色で結果プレビューを更新
+
+    /* 結果プレビューを更新 */
 
     if (
         typeof renderResultPreview === "function" &&
         document.getElementById("result-preview")
     ) {
+
         renderResultPreview();
+
     }
 
 }
 
 
 /* 11. テーマ設定画面の作成
-======================================== */
+========================================= */
 
 function createThemePanel() {
 
@@ -785,6 +1068,7 @@ function createThemePanel() {
         return;
 
     }
+
 
     const settings =
         document.getElementById("settings");
@@ -861,14 +1145,21 @@ function createThemePanel() {
                         </span>
 
                         <input
+
                             type="color"
+
                             id="custom-color-${index}"
+
                             value="${themeSettings.custom[index]}"
+
                         >
 
                         <span
+
                             id="custom-hex-${index}"
+
                             class="color-code"
+
                         >
                             ${themeSettings.custom[index]}
                         </span>
@@ -881,17 +1172,24 @@ function createThemePanel() {
 
 
             <button
+
                 type="button"
+
                 id="apply-custom-theme"
+
                 class="primary-btn"
+
             >
                 カスタムテーマを適用
             </button>
 
 
             <p
+
                 id="custom-theme-status"
+
                 style="margin-top:12px"
+
             ></p>
 
         </div>
@@ -915,15 +1213,21 @@ function createThemePanel() {
             <label class="toggle-switch">
 
                 <input
+
                     type="checkbox"
+
                     id="show-bear-setting"
+
                     aria-label="クマを表示する"
 
                     ${
                         themeSettings.showBear
+
                             ? "checked"
+
                             : ""
                     }
+
                 >
 
                 <span class="toggle-track">
@@ -935,9 +1239,13 @@ function createThemePanel() {
 
 
         <button
+
             type="button"
+
             id="reset-theme"
+
             class="secondary-btn"
+
         >
             初期テーマに戻す
         </button>
@@ -947,13 +1255,14 @@ function createThemePanel() {
 
     settings.appendChild(panel);
 
+
     renderThemeOptions();
 
 }
 
 
 /* 12. テーマカードの表示
-======================================== */
+========================================= */
 
 function renderThemeOptions() {
 
@@ -978,7 +1287,9 @@ function renderThemeOptions() {
                     class="theme-option
                         ${
                             themeSettings.selected === id
+
                                 ? "selected"
+
                                 : ""
                         }"
 
@@ -1040,6 +1351,7 @@ function renderThemeOptions() {
             "custom-theme-status"
         );
 
+
     if (customStatus) {
 
         customStatus.textContent =
@@ -1081,7 +1393,7 @@ function renderThemeOptions() {
 
 
 /* 13. カスタムカラーの操作
-======================================== */
+========================================= */
 
 function bindThemeEvents() {
 
@@ -1109,9 +1421,11 @@ function bindThemeEvents() {
                 themeSettings.custom[index] =
                     value;
 
+
                 document.getElementById(
                     `custom-hex-${index}`
                 ).textContent = value;
+
 
                 saveThemeSettings();
 
@@ -1198,6 +1512,7 @@ function bindThemeEvents() {
                 ).value =
                     themeSettings.custom[index];
 
+
                 document.getElementById(
                     `custom-hex-${index}`
                 ).textContent =
@@ -1228,7 +1543,7 @@ function bindThemeEvents() {
 
 
 /* 14. 通知
-======================================== */
+========================================= */
 
 function themeToast(message) {
 
@@ -1242,7 +1557,7 @@ function themeToast(message) {
 
 
 /* 15. クマのイラスト
-======================================== */
+========================================= */
 
 function createBearDecoration() {
 
@@ -1255,6 +1570,7 @@ function createBearDecoration() {
         return;
 
     }
+
 
     const footer =
         document.querySelector(
@@ -1274,11 +1590,17 @@ function createBearDecoration() {
     bear.innerHTML = `
 
         <img
+
             src="bear.png"
+
             alt=""
+
             class="bear-image"
+
             draggable="false"
+
         >
+
 
         <div class="bear-caption">
 
@@ -1295,7 +1617,7 @@ function createBearDecoration() {
 
 
 /* 16. 初期化
-======================================== */
+========================================= */
 
 function initializeTheme() {
 
@@ -1313,9 +1635,13 @@ function initializeTheme() {
 if (document.readyState === "loading") {
 
     document.addEventListener(
+
         "DOMContentLoaded",
+
         initializeTheme,
+
         { once: true }
+
     );
 
 } else {
@@ -1323,3 +1649,350 @@ if (document.readyState === "loading") {
     initializeTheme();
 
 }
+/* =========================================
+   REALISTIC CHOCOLATE FLAKES
+========================================= */
+
+function createChocolateFlakes() {
+
+    const width = 480;
+    const height = 480;
+
+    const count = 120;
+
+    // フレークの設定
+
+    const size = 0.75;
+    const opacity = 0.50;
+
+    // 毎回同じ配置になる乱数
+
+    let seed = 2026;
+
+    function random() {
+
+        seed = (
+            Math.imul(seed, 1664525)
+            + 1013904223
+        ) >>> 0;
+
+        return seed / 4294967296;
+
+    }
+
+    function range(min, max) {
+
+        return min + random() * (max - min);
+
+    }
+
+    // 破片の種類と割合
+
+    const types = [
+    ...Array(18).fill("B"),
+    ...Array(102).fill("D")
+];
+
+    // 種類をランダムに並べ替える
+
+    for (let i = types.length - 1; i > 0; i--) {
+
+        const j = Math.floor(
+            random() * (i + 1)
+        );
+
+        [types[i], types[j]] =
+            [types[j], types[i]];
+
+    }
+
+    const flakes = [];
+
+    for (let i = 0; i < count; i++) {
+
+        const x = range(0, width);
+        const y = range(0, height);
+
+        const rotation = range(0, 360);
+
+        const scale =
+            range(0.35, 1.25) * size;
+
+        const length = range(10, 22);
+
+        let shape = "";
+
+        /* A：細長い削りチョコ */
+
+        if (types[i] === "A") {
+
+            shape = `
+
+                <path
+                    d="
+                        M-2 1
+                        Q4 -4 ${length} -3
+                        L${length - 3} 1
+                        L5 3
+                        L0 5 Z
+                    "
+                    fill="url(#chocolate)"
+                />
+
+                <path
+                    d="
+                        M-2 1
+                        Q4 -4 ${length} -3
+                        L5 0
+                        L0 3 Z
+                    "
+                    fill="#99745D"
+                />
+
+                <path
+                    d="
+                        M1 2
+                        L5 0
+                        L${length - 3} -1
+                    "
+                    fill="none"
+                    stroke="#C19C82"
+                    stroke-width=".55"
+                />
+
+            `;
+
+        }
+
+        /* B：厚みのある砕いたチョコ */
+
+        if (types[i] === "B") {
+
+            shape = `
+
+                <path
+                    d="
+                        M-3 2
+                        L0 -4
+                        L6 -6
+                        L${length * 0.7} -1
+                        L10 5
+                        L3 8
+                        L-2 6 Z
+                    "
+                    fill="#281912"
+                />
+
+                <path
+                    d="
+                        M-3 2
+                        L0 -4
+                        L6 -6
+                        L${length * 0.7} -1
+                        L6 3
+                        L0 4 Z
+                    "
+                    fill="url(#chocolate)"
+                />
+
+                <path
+                    d="M-3 2 L0 4 L3 8 L-2 6 Z"
+                    fill="#755340"
+                />
+
+                <path
+                    d="M0 -4 L6 -6 L10 -3"
+                    fill="none"
+                    stroke="#B38C72"
+                    stroke-width=".7"
+                />
+
+                <path
+                    d="M1 -2 L4 -1 L3 2"
+                    fill="none"
+                    stroke="#342019"
+                    stroke-width=".6"
+                />
+
+            `;
+
+        }
+
+        /* C：薄く割れたチョコ */
+
+        if (types[i] === "C") {
+
+            shape = `
+
+                <path
+                    d="
+                        M-4 0
+                        L2 -5
+                        L${length} -4
+                        L12 0
+                        L6 3
+                        L-2 5 Z
+                    "
+                    fill="#39251D"
+                />
+
+                <path
+                    d="
+                        M-4 0
+                        L2 -5
+                        L${length} -4
+                        L6 1
+                        L-2 3 Z
+                    "
+                    fill="url(#chocolate)"
+                />
+
+                <path
+                    d="
+                        M2 -5
+                        L${length} -4
+                        L6 1
+                    "
+                    fill="none"
+                    stroke="#B18C73"
+                    stroke-width=".55"
+                />
+
+            `;
+
+        }
+        /* D：細かいチョコ粒 */
+
+if (types[i] === "D") {
+
+    const w = range(2, 7);
+    const h = range(2, 5);
+
+    shape = `
+
+        <path
+            d="
+                M0 0
+                L${w * 0.45} -1
+                L${w} ${h * 0.3}
+                L${w * 0.65} ${h}
+                L-1 ${h * 0.6}
+                Z
+            "
+            fill="url(#chocolate)"
+        />
+
+        <path
+            d="
+                M0 0
+                L${w * 0.45} -1
+                L${w} ${h * 0.3}
+            "
+            fill="none"
+            stroke="#99745D"
+            stroke-width=".5"
+        />
+
+    `;
+
+}
+
+        // 端の破片も自然につながるようにする
+
+        const offsetsX = [0];
+        const offsetsY = [0];
+
+        if (x < 25) offsetsX.push(width);
+        if (x > width - 25) offsetsX.push(-width);
+
+        if (y < 25) offsetsY.push(height);
+        if (y > height - 25) offsetsY.push(-height);
+
+        for (const dx of offsetsX) {
+
+            for (const dy of offsetsY) {
+
+                flakes.push(`
+
+                    <g transform="
+                        translate(${x + dx} ${y + dy})
+                        rotate(${rotation})
+                        scale(${scale})
+                    ">
+
+                        ${shape}
+
+                    </g>
+
+                `);
+
+            }
+
+        }
+
+    }
+
+    const svg = `
+
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="${width}"
+            height="${height}"
+            viewBox="0 0 ${width} ${height}"
+        >
+
+            <defs>
+
+                <linearGradient
+                    id="chocolate"
+                    x1="0"
+                    y1="0"
+                    x2=".8"
+                    y2="1"
+                >
+
+                    <stop
+                        offset="0%"
+                        stop-color="#94705B"
+                    />
+
+                    <stop
+                        offset="25%"
+                        stop-color="#654538"
+                    />
+
+                    <stop
+                        offset="60%"
+                        stop-color="#50352B"
+                    />
+
+                    <stop
+                        offset="100%"
+                        stop-color="#281912"
+                    />
+
+                </linearGradient>
+
+            </defs>
+
+            <g opacity="${opacity}">
+
+                ${flakes.join("")}
+
+            </g>
+
+        </svg>
+
+    `;
+
+    const image =
+        `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+
+    document.documentElement.style.setProperty(
+        "--mint-flakes",
+        image
+    );
+
+}
+
+createChocolateFlakes();
