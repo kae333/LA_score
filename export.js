@@ -543,6 +543,7 @@ function getExportFilename(extension) {
    8. プレビューを画像化
 ========================= */
 
+
 async function captureResult() {
 
     if (typeof html2canvas !== "function") {
@@ -553,7 +554,11 @@ async function captureResult() {
 
     }
 
+    // 最新の得点を反映
+
     renderResultPreview();
+
+    // フォントの読み込みを待つ
 
     if (document.fonts) {
 
@@ -562,6 +567,12 @@ async function captureResult() {
     }
 
     const preview = $("result-preview");
+
+
+    // PC版と同じ幅で画像を生成
+
+    const exportWidth = 720;
+
 
     const canvas = await html2canvas(preview, {
 
@@ -573,20 +584,98 @@ async function captureResult() {
 
         logging: false,
 
-        width: preview.offsetWidth,
+        windowWidth: 1440,
 
-        height: preview.offsetHeight,
+        windowHeight: 1200,
 
-        windowWidth: Math.max(
-            1200,
-            preview.offsetWidth + 100
-        )
+        scrollX: 0,
+
+        scrollY: 0,
+
+
+        // 出力専用の画面を調整する
+
+        onclone: (clonedDocument) => {
+
+            const clonedPreview =
+                clonedDocument.getElementById(
+                    "result-preview"
+                );
+
+            const wrapper =
+                clonedPreview.closest(
+                    ".preview-wrapper"
+                );
+
+
+            // PC版と同じサイズに固定
+
+            clonedPreview.style.setProperty(
+                "width",
+                `${exportWidth}px`,
+                "important"
+            );
+
+            clonedPreview.style.setProperty(
+                "max-width",
+                "none",
+                "important"
+            );
+
+            clonedPreview.style.setProperty(
+                "height",
+                "auto",
+                "important"
+            );
+
+            clonedPreview.style.setProperty(
+                "padding",
+                "44px 40px",
+                "important"
+            );
+
+            clonedPreview.style.setProperty(
+                "margin",
+                "0",
+                "important"
+            );
+
+            clonedPreview.style.setProperty(
+                "box-sizing",
+                "border-box",
+                "important"
+            );
+
+            clonedPreview.style.overflow =
+                "visible";
+
+
+            // 親要素による切り取りを防ぐ
+
+            if (wrapper) {
+
+                wrapper.style.width =
+                    `${exportWidth}px`;
+
+                wrapper.style.maxWidth =
+                    "none";
+
+                wrapper.style.padding =
+                    "0";
+
+                wrapper.style.overflow =
+                    "visible";
+
+            }
+
+        }
 
     });
 
     return canvas;
 
 }
+
 
 function setExportLoading(loading) {
 
