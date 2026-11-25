@@ -3975,3 +3975,35 @@ input[type="number"] {
     background: var(--background);
 
 }
+/* スマホ版：開催日の入力欄を統一 */
+
+@media (max-width: 768px) {
+
+    #event-date {
+        -webkit-appearance: none;
+        appearance: none;
+
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        box-sizing: border-box;
+
+        background: var(--input-bg);
+        color: var(--text);
+
+        border: 1px solid var(--border);
+        border-radius: 8px;
+
+        padding: 10px 12px;
+        min-height: 40px;
+
+        font-size: 16px;
+    }
+
+    #event-date::-webkit-date-and-time-value {
+        text-align: left;
+    }
+
+}
